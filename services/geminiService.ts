@@ -3,11 +3,20 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { RoadmapItem, TopicContent, UserLevel } from "../types.ts";
 
 const getApiKey = () => {
+  // Try to get from Vite's import.meta.env first (standard for Vite)
+  const viteKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.VITE_API_KEY;
+  if (viteKey) return viteKey;
+
+  // Fallback to process.env (injected via vite.config.ts define)
   try {
-    return process.env.API_KEY || '';
-  } catch {
-    return (window as any).process?.env?.API_KEY || '';
+    const envKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+    if (envKey) return envKey;
+  } catch (e) {
+    // process.env might not be defined
   }
+
+  // Last resort: window.process (sometimes used in polyfills)
+  return (window as any).process?.env?.GEMINI_API_KEY || (window as any).process?.env?.API_KEY || '';
 };
 
 export const generatePersonalizedRoadmap = async (level: UserLevel, stack: string[]): Promise<RoadmapItem[]> => {

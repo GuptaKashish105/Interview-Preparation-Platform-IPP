@@ -55,41 +55,6 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onStart, initialTopics, initi
               Stop learning randomly. Get a personalized 30-day interview roadmap tailored to your level and tech stack.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="p-5 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all"
-            >
-              <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
-                <Target className="w-6 h-6" />
-              </div>
-              <h4 className="font-bold text-slate-800 text-base">Interview Focused</h4>
-              <p className="text-sm text-slate-500 mt-1">Every topic is selected for its high probability in technical rounds.</p>
-            </motion.div>
-            
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="p-5 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all"
-            >
-              <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4">
-                <Brain className="w-6 h-6" />
-              </div>
-              <h4 className="font-bold text-slate-800 text-base">Level Specific</h4>
-              <p className="text-sm text-slate-500 mt-1">Curriculum adjusts based on whether you're a Fresher or Senior.</p>
-            </motion.div>
-          </div>
-
-          <div className="flex items-center gap-4 text-slate-400 text-sm font-medium">
-            <div className="flex -space-x-2">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
-                  <img src={`https://picsum.photos/seed/user${i}/100/100`} alt="user" referrerPolicy="no-referrer" />
-                </div>
-              ))}
-            </div>
-            <span>Joined by 10,000+ engineers this month</span>
-          </div>
         </motion.div>
 
         <motion.div
@@ -141,10 +106,10 @@ const SetupWizard: React.FC<SetupWizardProps> = ({ onStart, initialTopics, initi
                   value={topics}
                   onChange={(e) => setTopics(e.target.value)}
                   placeholder="e.g. React, Node.js, System Design"
-                  className="w-full p-6 bg-slate-50 border-2 border-slate-100 rounded-[32px] focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 font-bold placeholder:text-slate-300 resize-none"
+                  className="w-full p-6 bg-slate-50 border-2 border-slate-100 rounded-[32px] focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 font-bold placeholder:text-slate-300 resize-none z-10 relative"
                 />
-                <div className="absolute bottom-4 right-6 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                  {topics.split(',').length} Topics
+                <div className="absolute bottom-4 right-6 text-[10px] text-slate-400 font-bold uppercase tracking-widest z-20 pointer-events-none">
+                  {topics.split(',').filter(t => t.trim().length > 0).length} Topics
                 </div>
               </div>
               <p className="text-[10px] text-slate-400 font-bold italic px-2">

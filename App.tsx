@@ -23,6 +23,7 @@ const App: React.FC = () => {
   });
   const [selectedTopic, setSelectedTopic] = useState<{ title: string; description: string } | null>(null);
   const [topicContent, setTopicContent] = useState<TopicContent | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('senior_path_progress');
@@ -44,9 +45,13 @@ const App: React.FC = () => {
   };
 
   const handleStartRoadmap = async (topics: string[], level: UserLevel) => {
+    setError(null);
     setStatus(AppStatus.GENERATING_ROADMAP);
     try {
       const roadmap = await generatePersonalizedRoadmap(level, topics);
+      if (!roadmap || roadmap.length === 0) {
+        throw new Error("The AI failed to generate a valid roadmap. This usually happens if the API key is invalid or the prompt was blocked.");
+      }
       const newProgress: UserProgress = {
         completedDays: [],
         startDate: new Date().toISOString(),
@@ -58,8 +63,9 @@ const App: React.FC = () => {
       saveProgress(newProgress);
       setCurrentDay(1);
       setStatus(AppStatus.READY);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setError(err.message || "An unexpected error occurred while generating your roadmap.");
       setStatus(AppStatus.IDLE);
     }
   };
@@ -123,11 +129,27 @@ const App: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans">
       {status === AppStatus.IDLE ? (
-        <SetupWizard 
-          onStart={handleStartRoadmap} 
-          initialTopics={progress.topics} 
-          initialLevel={progress.level}
-        />
+        <div className="flex-1 flex flex-col">
+          {error && (
+            <div className="bg-rose-50 border-b border-rose-100 p-4 flex items-center justify-center gap-4 animate-in slide-in-from-top duration-500">
+              <div className="flex items-center gap-2 text-rose-600 font-bold text-sm">
+                <span className="w-2 h-2 bg-rose-600 rounded-full animate-pulse"></span>
+                Error: {error}
+              </div>
+              <button 
+                onClick={() => setError(null)}
+                className="text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+          <SetupWizard 
+            onStart={handleStartRoadmap} 
+            initialTopics={progress.topics} 
+            initialLevel={progress.level}
+          />
+        </div>
       ) : status === AppStatus.GENERATING_ROADMAP ? (
         <div className="flex-1 flex flex-col items-center justify-center space-y-8 bg-grid">
           <div className="relative">
