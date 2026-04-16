@@ -2,6 +2,12 @@
 
 InterviewAI is a premium, AI-powered interview preparation platform designed to help software engineers crack top-tier technical interviews. It generates a personalized 30-day roadmap based on your career stage and target technology stack.
 
+---
+
+## 🔗 Live Demo
+
+👉 [https://interview-preparation-platform-ipp.vercel.app/](https://interview-preparation-platform-ipp.vercel.app/)
+
 ## 🚀 Features
 
 - **Personalized Roadmaps**: AI-generated 30-day plans tailored for Freshers, Mid-level, and Senior engineers.
